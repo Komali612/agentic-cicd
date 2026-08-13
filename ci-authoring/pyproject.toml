@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ci-authoring"
+version = "0.1.0"
+description = "Shared engine for CI pipeline-authoring agents: Discover -> Generate -> Validate -> Deploy."
+requires-python = ">=3.11"
+dependencies = [
+    "agent-contracts>=0.1",
+    "pydantic>=2",
+    "pyyaml>=6",
+    "httpx>=0.27",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ci_authoring"]
+
+[tool.ruff]
+line-length = 100

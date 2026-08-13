@@ -1,0 +1,6 @@
+apiVersion: v2
+name: netcore-ci
+description: NetCoreCI agent — authors CI pipelines for .NET Core repositories.
+type: application
+version: 0.1.0
+appVersion: "0.1.0"

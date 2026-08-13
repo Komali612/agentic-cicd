@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "orchestrator-agent"
+version = "0.1.0"
+description = "Orchestrator agent — classifies repositories and routes them to the matching CI worker agent."
+requires-python = ">=3.11"
+dependencies = [
+    "agent-core[anthropic] @ git+https://github.com/Komali612/agent-core@v0.2.0",
+    "agent-contracts>=0.1",
+    "httpx>=0.27",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.scripts]
+agent = "agent.main:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/agent"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.ruff]
+line-length = 100

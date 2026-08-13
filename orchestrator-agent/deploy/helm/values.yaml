@@ -1,0 +1,24 @@
+# Per-agent Helm values. The chart itself is frozen.
+image:
+  repository: orchestrator-agent
+  tag: latest
+  pullPolicy: IfNotPresent
+
+replicas: 1
+
+service:
+  port: 8080
+
+env:
+  AGENT_NAME: orchestrator
+  AGENT_LOG_LEVEL: INFO
+  WORKER_NETCORE_CI_URL: http://netcore-ci:8080
+  WORKER_NETLEGACY_CI_URL: http://netlegacy-ci:8080
+
+# GITHUB_TOKEN is a secret (needed for private repos/orgs). Optionally add
+# ANTHROPIC_API_KEY to enable LLM-assisted classification.
+secretEnv:
+  GITHUB_TOKEN: {name: orchestrator-secrets, key: github-token}
+  # ANTHROPIC_API_KEY: {name: orchestrator-secrets, key: anthropic-key}
+
+resources: {}
