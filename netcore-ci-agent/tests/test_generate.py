@@ -52,7 +52,8 @@ def test_image_pipeline_publishes_to_ghcr():
         StepConfig(),
     )
     workflow = artifact.files[artifact.primary_path]
-    assert "ghcr.io/${{ github.repository }}" in workflow
+    assert "ghcr.io/${GITHUB_REPOSITORY,,}" in workflow  # lowercased for GHCR
+    assert "${{ env.IMAGE }}" in workflow
     assert "packages: write" in workflow            # permission to push to GHCR
     assert "docker/build-push-action@v6" in workflow
     assert "sbom.cyclonedx.json" in workflow         # CycloneDX SBOM

@@ -72,7 +72,9 @@ def render_netcore_ci(discovery: Discovery, config: StepConfig) -> str:
     do_scan = "scan" not in config.disabled_steps
     do_image = "image" not in config.disabled_steps
 
-    image = "ghcr.io/${{ github.repository }}"
+    # GHCR requires a lowercase repository; ${{ github.repository }} can contain
+    # uppercase (the owner), so we lowercase it into $IMAGE in a step below.
+    image = "${{ env.IMAGE }}"
     sha_ref = image + ":${{ github.sha }}"
     latest_ref = image + ":latest"
 
@@ -129,6 +131,8 @@ def render_netcore_ci(discovery: Discovery, config: StepConfig) -> str:
         # FR-N.10: build the image, scan it (substitute for Wiz), emit a CycloneDX
         # SBOM, then publish to GHCR (the substitute for Nexus, PRD §8).
         steps += [
+            "      - name: Set image name (GHCR requires a lowercase repository)",
+            '        run: echo "IMAGE=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_ENV"',
             "      - name: Log in to GHCR",
             "        uses: docker/login-action@v3",
             "        with:",
