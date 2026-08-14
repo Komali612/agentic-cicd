@@ -37,3 +37,37 @@ def test_sdk_version_tracks_target_framework():
 def test_disabled_step_is_omitted():
     content = render_netcore_ci(_discovery(), StepConfig(disabled_steps=["sonar"]))
     assert "SonarQube" not in content
+
+
+def test_image_pipeline_publishes_to_ghcr():
+    """FR-N.10: build a container image, scan it, emit an SBOM, and push to GHCR;
+    a Dockerfile is generated when the repository has none."""
+    artifact = NetCoreWorkflowGenerator().generate(
+        DotNetCoreDiscovery(
+            runner="ubuntu-latest",
+            build_tool="dotnet",
+            target_framework="net8.0",
+            project_files=["src/App/App.csproj"],
+        ),
+        StepConfig(),
+    )
+    workflow = artifact.files[artifact.primary_path]
+    assert "ghcr.io/${{ github.repository }}" in workflow
+    assert "packages: write" in workflow            # permission to push to GHCR
+    assert "docker/build-push-action@v6" in workflow
+    assert "sbom.cyclonedx.json" in workflow         # CycloneDX SBOM
+    assert "Dockerfile" in artifact.files            # generated because the repo has none
+
+
+def test_trivy_action_pinned_to_a_real_tag():
+    """Regression: the Trivy action must not reference the non-existent 0.24.0 tag."""
+    workflow = render_netcore_ci(_discovery(), StepConfig())
+    assert "aquasecurity/trivy-action@0.24.0" not in workflow
+    assert "aquasecurity/trivy-action@0.35.0" in workflow
+
+
+def test_image_step_is_configurable_off():
+    """CR-2: image build can be disabled per app (and then no Dockerfile is added)."""
+    artifact = NetCoreWorkflowGenerator().generate(_discovery(), StepConfig(disabled_steps=["image"]))
+    assert "docker/build-push-action" not in artifact.files[artifact.primary_path]
+    assert "Dockerfile" not in artifact.files
