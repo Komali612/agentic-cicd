@@ -56,8 +56,9 @@ def render_dockerfile(discovery: Discovery) -> str:
         f"FROM mcr.microsoft.com/dotnet/sdk:{base_tag} AS build\n"
         "WORKDIR /src\n"
         "COPY . .\n"
-        "RUN dotnet restore\n"
-        f"RUN {publish} -c Release -o /app --no-restore\n"
+        # Publish the project directly — it restores implicitly. (Avoids relying on a
+        # solution file, whose paths may be Windows-style and fail on a Linux build.)
+        f"RUN {publish} -c Release -o /app\n"
         "\n"
         f"FROM mcr.microsoft.com/dotnet/aspnet:{base_tag}\n"
         "WORKDIR /app\n"
