@@ -6,6 +6,7 @@ classifier. ``model`` is passed through so classification can use it when set.
 from agent_core import Agent
 
 from .config import settings
+from .console import CONSOLE_HTML
 from .handler import OrchestratorHandler
 from .prompts import SYSTEM_PROMPT
 
@@ -16,4 +17,5 @@ def build_agent() -> Agent:
         prompt=SYSTEM_PROMPT,
         handler=OrchestratorHandler(),
         model=settings.model,
+        console_html=CONSOLE_HTML,
     )
