@@ -45,10 +45,10 @@ a heuristic fallback, so the whole system runs with **no API key** for the demo.
 | Area | Implemented | Deferred (Stage 2/3) |
 |------|-------------|----------------------|
 | Orchestrator | FR-0.1 (repo/list/org), 0.2 (classify+route), 0.4/0.5 (exception list), 0.6 (never authors) | 0.3 (call CD after CI — CD pending) |
-| NetCoreCI | FR-N.1 discover, N.2 check-existing (skip if compliant), N.3 configurable steps, N.4 triggers, N.5 runner, N.6 build tool, N.7 tests+Sonar, N.11 lint-validate + 3-retry, N.12 PR (never merge) | N.8 SAST/SCA/DAST, N.9 Dynatrace/Splunk, N.10 Docker/SBOM/scan/Nexus/Helm; N.2 repair-in-place & N.11 sandboxed test-agent run (see Known gaps) |
+| NetCoreCI | FR-N.1 discover, N.2 check-existing (skip if compliant), N.3 configurable steps, N.4 triggers, N.5 runner, N.6 build tool, N.7 tests+Sonar, N.8 SCA (Trivy), N.10 image build → scan → SBOM → **push to GHCR**, N.11 lint-validate + 3-retry, N.12 PR (never merge) | N.8 real SAST/SCA (Fortify/Sonatype) + DAST, N.9 Dynatrace/Splunk, N.10 real Nexus + Helm-chart update; N.2 repair-in-place & N.11 sandboxed test-agent run (see Known gaps) |
 | NetLegacyCI | FR-L.1/L.4/L.5 (Windows/MSBuild), tests+Sonar, lint-validate+retry, PR | SAST/SCA/DAST, monitoring, MSI packaging, L.3 repair-in-place (see Known gaps) |
 | Cross-cutting | CR-2 (configurable steps), CR-3 check-existing (skip if compliant), NFR-2 (no self-merge), NFR-3 (3-retry cap) | CR-1 critical-finding gates (need Fortify/Sonatype/Wiz), CR-3 repair-in-place, NFR-1 async scale-out |
-| Tooling | SonarQube (substitute for Fortify), unit tests | Fortify, Sonatype, Fortify WebInspect, Wiz, Nexus |
+| Tooling | SonarQube (→Fortify), Trivy (SCA + image scan →Sonatype/Wiz), GHCR (→Nexus), Trivy CycloneDX SBOM, unit tests | Fortify, Sonatype, Fortify WebInspect, Wiz, Nexus (real), DAST |
 
 **Not started (pending customer input, per PRD §7/§9):** the 2 COBOL CI agents and
 all 4 CD agents.
