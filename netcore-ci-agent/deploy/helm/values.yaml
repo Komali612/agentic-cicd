@@ -13,9 +13,9 @@ env:
   AGENT_NAME: netcore-ci
   AGENT_LOG_LEVEL: INFO
 
-# GITHUB_TOKEN is a secret — create a k8s Secret and reference it here:
-#   kubectl create secret generic netcore-ci-secrets --from-literal=github-token=ghp_xxx
+# GITHUB_TOKEN is a secret. The `netcore-ci-secrets` Secret is created + synced
+# by the Doppler Kubernetes Operator (keys = Doppler secret names). See ../../SECRETS.md.
 secretEnv:
-  GITHUB_TOKEN: {name: netcore-ci-secrets, key: github-token}
+  GITHUB_TOKEN: {name: netcore-ci-secrets, key: GITHUB_TOKEN}
 
 resources: {}

@@ -15,10 +15,12 @@ env:
   WORKER_NETCORE_CI_URL: http://netcore-ci:8080
   WORKER_NETLEGACY_CI_URL: http://netlegacy-ci:8080
 
-# GITHUB_TOKEN is a secret (needed for private repos/orgs). Optionally add
-# ANTHROPIC_API_KEY to enable LLM-assisted classification.
+# Secrets. The `orchestrator-secrets` Secret is created + synced by the Doppler
+# Kubernetes Operator (keys = Doppler secret names). See ../../SECRETS.md.
+# GITHUB_TOKEN is needed for private repos/orgs; ANTHROPIC_API_KEY enables
+# LLM-assisted classification.
 secretEnv:
-  GITHUB_TOKEN: {name: orchestrator-secrets, key: github-token}
-  # ANTHROPIC_API_KEY: {name: orchestrator-secrets, key: anthropic-key}
+  GITHUB_TOKEN: {name: orchestrator-secrets, key: GITHUB_TOKEN}
+  # ANTHROPIC_API_KEY: {name: orchestrator-secrets, key: ANTHROPIC_API_KEY}
 
 resources: {}

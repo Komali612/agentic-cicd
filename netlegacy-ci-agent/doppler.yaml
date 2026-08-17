@@ -1,0 +1,6 @@
+# Pins this agent to a Doppler project/config (names only — no secret values).
+# Run `doppler setup --no-interactive` once, then `doppler run -- python -m agent.main`.
+# See ../SECRETS.md.
+setup:
+  project: agentic-cicd
+  config: dev

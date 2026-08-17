@@ -13,9 +13,9 @@ env:
   AGENT_NAME: netlegacy-ci
   AGENT_LOG_LEVEL: INFO
 
-# GITHUB_TOKEN is a secret — create a k8s Secret and reference it here:
-#   kubectl create secret generic netlegacy-ci-secrets --from-literal=github-token=ghp_xxx
+# GITHUB_TOKEN is a secret. The `netlegacy-ci-secrets` Secret is created + synced
+# by the Doppler Kubernetes Operator (keys = Doppler secret names). See ../../SECRETS.md.
 secretEnv:
-  GITHUB_TOKEN: {name: netlegacy-ci-secrets, key: github-token}
+  GITHUB_TOKEN: {name: netlegacy-ci-secrets, key: GITHUB_TOKEN}
 
 resources: {}
