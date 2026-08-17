@@ -100,11 +100,30 @@ pip install ./agent-contracts ./ci-authoring pytest && pytest agent-contracts ci
 pip install ./agent-contracts ./ci-authoring ./netcore-ci-agent pytest && pytest netcore-ci-agent
 ```
 
+## Secrets (Doppler)
+
+Secrets are **not** stored in `.env`. The two secrets — `GITHUB_TOKEN` (required
+to open a PR) and the optional `ANTHROPIC_API_KEY` — live in [Doppler](https://doppler.com)
+and are injected at launch. No code changes: the agents still read plain env vars.
+
+```bash
+# one-time (see SECRETS.md for the full walkthrough)
+doppler login && doppler projects create agentic-cicd
+doppler secrets set GITHUB_TOKEN="$(gh auth token)" --project agentic-cicd --config dev
+
+# then run any agent with the secret injected:
+doppler run -- python -m agent.main
+```
+
+Full setup — local run commands and the k8s Doppler Operator path — is in
+[SECRETS.md](./SECRETS.md).
+
 ## Deploy (Kubernetes)
 
-Each agent ships its own image + Helm chart. Give each worker a `GITHUB_TOKEN`
-secret; give the orchestrator the worker URLs and (optionally) an
-`ANTHROPIC_API_KEY` for LLM-assisted classification.
+Each agent ships its own image + Helm chart. Secrets are supplied by the
+**Doppler Kubernetes Operator**, which creates + syncs each agent's
+`<agent>-secrets` Secret (already referenced by the chart's `secretEnv`). See
+[SECRETS.md](./SECRETS.md#kubernetes-doppler-operator--native-secret).
 
 ```bash
 make image && make deploy     # in each agent directory
